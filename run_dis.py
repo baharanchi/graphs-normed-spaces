@@ -11,6 +11,7 @@ from config import load_arguments
 import random
 from torch.nn.utils import clip_grad_norm_
 from torch_geometric import seed_everything
+import os
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -176,4 +177,7 @@ if __name__ == "__main__":
                     train_loader=train_loader, valid_loader=valid_loader)
     runner.run()
 
-    torch.save(torch.tensor(model.embeddings.embeds), f'saved_embeddings/embedding_{args.graph}_{args.model}_{args.metric}.pt')
+    save_dir = 'saved_embeddings'
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    torch.save(torch.tensor(model.embeddings.embeds), f'{save_dir}/embedding_{args.graph}_{args.model}_{args.metric}.pt')
