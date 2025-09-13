@@ -2,6 +2,9 @@ import networkx as nx
 from networkx.generators import expanders
 import networkit as nk
 import numpy as np
+import os
+from torch_geometric.datasets import Planetoid
+from torch_geometric.utils import convert
 
 class DatasetLoader(object):    
     
@@ -18,14 +21,19 @@ class DatasetLoader(object):
     @staticmethod    
     def load_real_graph(args):
         path = f"data/{args.graph}.edgelist"
-        graph = nx.Graph(name=args.graph)
-        with open(path, "r") as f:
-            for line in f:
-                line = line.strip().split()
-                if len(line) == 2 or (len(line) > 2 and not line[2].replace(".", "", 1).isdigit()):
-                    graph.add_edge(line[0], line[1])
-                else:
-                    graph.add_edge(line[0], line[1], weight=float(line[2]))
+        if os.path.exists(path= path):
+            graph = nx.Graph(name=args.graph)
+            with open(path, "r") as f:
+                for line in f:
+                    line = line.strip().split()
+                    if len(line) == 2 or (len(line) > 2 and not line[2].replace(".", "", 1).isdigit()):
+                        graph.add_edge(line[0], line[1])
+                    else:
+                        graph.add_edge(line[0], line[1], weight=float(line[2]))
+        else:
+            save_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', 'Planetoid')
+            tg_graph = Planetoid(save_path, name=args.graph)
+            graph = convert.to_networkx(tg_graph[0])
         return graph
                         
     @classmethod
