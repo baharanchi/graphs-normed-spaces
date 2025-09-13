@@ -1,3 +1,4 @@
+Forked from https://github.com/andyweizhao/graphs-normed-spaces
 Implementation for `Normed Spaces for Graph Embeddings`
 
 ## Available Spaces
@@ -17,7 +18,8 @@ Below are the instructions about running experiments in the l1 and linf normed s
 
 ``python run_dis.py --model euclidean --metric linf --dims 20 --learning_rate 0.01 --batch_size 2048 --epoch 3000 --graph tree``
 
-``python run_dis.py --model prod-eueu --metric l1,linf --dims 20 --learning_rate 0.01 --batch_size 2048 --epoch 3000 --graph tree``
+``python run_dis.py --model 
+ --metric l1,linf --dims 20 --learning_rate 0.01 --batch_size 2048 --epoch 3000 --graph tree``
 
 ``python run_dis.py --model pesudo-eueu --metric l2,l2 --dims 20 --learning_rate 0.01 --batch_size 2048 --epoch 3000 --graph grid``
 
