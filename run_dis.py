@@ -52,6 +52,7 @@ class Runner(object):
     def run(self):
         checkpoint_path = f'model.pt'
         early_stopping = EarlyStopping(patience=self.args.patience, verbose=False, path=checkpoint_path)    
+
         for epoch in range(1, self.args.epoch + 1):
 
             start = time.perf_counter()
@@ -114,6 +115,7 @@ class Runner(object):
             
             self.optimizer.step()
         
+        self.scheduler.step
         torch.cuda.empty_cache()
         return tr_loss / train_split.size
                              
@@ -191,8 +193,9 @@ if __name__ == "__main__":
     model = DisModel(args).to(args.device)
 
     optimizer = RiemannianAdam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay, stabilize=None)
-    
-    runner = Runner(model, optimizer, None, id2node=id2node, args=args,
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma= 0.95)
+
+    runner = Runner(model, optimizer, scheduler= scheduler, id2node=id2node, args=args,
                     train_loader=train_loader, valid_loader=valid_loader)
     runner.run()
 
