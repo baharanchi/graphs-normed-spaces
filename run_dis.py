@@ -175,3 +175,5 @@ if __name__ == "__main__":
     runner = Runner(model, optimizer, None, id2node=id2node, args=args,
                     train_loader=train_loader, valid_loader=valid_loader)
     runner.run()
+
+    torch.save(torch.tensor(model.embeddings.embeds), f'saved_embeddings/embedding_{args.graph}_{args.model}_{args.metric}.pt')
