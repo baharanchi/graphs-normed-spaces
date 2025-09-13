@@ -1,0 +1,5 @@
+scikit-learn
+torch-geometric == 2.1.0
+geoopt
+networkit == 10.0
+networkx == 2.6.3
