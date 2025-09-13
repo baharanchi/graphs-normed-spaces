@@ -23,6 +23,10 @@ def load_arguments():
 
     parser.add_argument("--val_every", default=1, type=int)
     
+    parser.add_argument("--test_map_every", default=50, type=int)
+
+    parser.add_argument("--save_embeddings_every", default=50, type=int)
+
     parser.add_argument("--tree_height", default=5, type=int)    
 
     parser.add_argument("--max_gradient_norm", default=250, type=float)    

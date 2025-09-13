@@ -69,13 +69,32 @@ class Runner(object):
                 if early_stopping.early_stop:
                     break                
 
+            if epoch % self.args.test_map_every == 0:
+                mAP = self.calculate_mAP()
+                print(f'mAP after ep {epoch}: {mAP}')
+
+            if self.args.save_embeddings_every != 1 and epoch % self.args.save_embeddings_every == 0:
+                self.save_embeddings()
+            
+
         self.model.load_state_dict(torch.load(checkpoint_path))
         
         distortion = self.evaluate(self.valid_loader)
         precision = self.calculate_mAP()
         
         print(f"Final Results: Distortion: {distortion * 100:.2f}, Precision: {precision * 100:.2f}")        
-                                     
+                                    
+
+    def save_embeddings(self):
+        save_dir = 'saved_embeddings'
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        file_path = f'{save_dir}/embedding_{self.args.graph}_{self.args.model}_{self.args.metric}_d{self.args.dims}.pt'
+        torch.save(torch.tensor(model.embeddings.embeds), file_path)
+        print(f'Saved embeddings to {file_path}')
+
+
+
     def train_epoch(self, train_split, epoch_num):
         tr_loss = 0.0
         self.model.train()
@@ -177,7 +196,4 @@ if __name__ == "__main__":
                     train_loader=train_loader, valid_loader=valid_loader)
     runner.run()
 
-    save_dir = 'saved_embeddings'
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
-    torch.save(torch.tensor(model.embeddings.embeds), f'{save_dir}/embedding_{args.graph}_{args.model}_{args.metric}.pt')
+    runner.save_embeddings()
